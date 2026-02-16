@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page">
+        <header class="site-header">
+            <span class="subtitle">welcome to</span>
+            <h1><a href="index.html">the land of the stupid</a></h1>
+        </header>
+
+        <main id="feed-container">
+            </main>
+
+    </div>
+
+    <script src="posts.js"></script>
+    <script>
+        const container = document.getElementById('feed-container');
+        container.innerHTML = POSTS.map(post => `
+            <section class="install-method">
+                <div class="link-row">
+                    <div class="cmd-row">
+                        <code>${post.date}</code>
+                        <a href="${post.url}"><h3>${post.title}</h3></a>
+                    </div>
+                </div>
+            </section>
+        `).join('');
+    </script>
+</body>
+</html>
