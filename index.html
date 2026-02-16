@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>home</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .post-entry {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .post-entry h3 {
+            margin: 0;
+            font-size: 1.125rem;
+        }
+    </style>
 </head>
 <body>
     <div class="page">
@@ -13,23 +25,17 @@
             <h1><a href="index.html">the land of the stupid</a></h1>
         </header>
 
-        <main id="feed-container">
-            </main>
-
+        <main id="feed-container"></main>
     </div>
 
     <script src="posts.js"></script>
     <script>
         const container = document.getElementById('feed-container');
         container.innerHTML = POSTS.map(post => `
-            <section class="install-method">
-                <div class="link-row">
-                    <div class="cmd-row">
-                        <code>${post.date}</code>
-                        <a href="${post.url}"><h3>${post.title}</h3></a>
-                    </div>
-                </div>
-            </section>
+            <div class="post-entry">
+                <code>${post.date}</code>
+                <a href="${post.url}"><h3>${post.title}</h3></a>
+            </div>
         `).join('');
     </script>
 </body>
