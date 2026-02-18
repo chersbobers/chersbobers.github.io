@@ -1,0 +1,50 @@
+Import("/style.css")
+
+Paget { home }
+
+Style {
+    .post-entry {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    .post-entry h3 {
+        margin: 0;
+        font-size: 1.125rem;
+    }
+}
+
+UI {
+    <div class="page">
+        <header class="site-header">
+            <span class="subtitle">welcome to</span>
+            <h1><a href="/">the land of the stupid</a></h1>
+        </header>
+
+        <main id="feed-container"></main>
+    </div>
+}
+
+Script {
+    const renderFeed = () => {
+        const container = document.getElementById('feed-container');
+        if (window.POSTS) {
+            container.innerHTML = window.POSTS.map(post => `
+                <div class="post-entry">
+                    <code>${post.date}</code>
+                    <a href="/${post.url}"><h3>${post.title}</h3></a>
+                </div>
+            `).join('');
+        }
+    };
+
+    if (!document.querySelector('script[src="/posts.js"]')) {
+        const s = document.createElement('script');
+        s.src = '/posts.js'; 
+        s.onload = renderFeed;
+        document.head.appendChild(s);
+    } else {
+        renderFeed();
+    }
+}

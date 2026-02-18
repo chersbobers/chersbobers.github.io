@@ -3,40 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .post-entry {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        .post-entry h3 {
-            margin: 0;
-            font-size: 1.125rem;
-        }
+    <title>YAWDL</title>
+    <style id="yawdl-init-style">
+        body { background: #191724; color: #e0def4; font-family: monospace; padding: 20px; }
     </style>
 </head>
 <body>
-    <div class="page">
-        <header class="site-header">
-            <span class="subtitle">welcome to</span>
-            <h1><a href="index.html">the land of the stupid</a></h1>
-        </header>
+    <div id="root">Loading...</div>
 
-        <main id="feed-container"></main>
-    </div>
+    <script type="module">
+        import "./yawdl-engine.js";
 
-    <script src="posts.js"></script>
-    <script>
-        const container = document.getElementById('feed-container');
-        container.innerHTML = POSTS.map(post => `
-            <div class="post-entry">
-                <code>${post.date}</code>
-                <a href="${post.url}"><h3>${post.title}</h3></a>
-            </div>
-        `).join('');
+        async function navigate(path) {
+            try {
+                // 1. Clean the path (remove leading slash and any existing .html extension)
+                let cleanPath = path.startsWith('/') ? path.slice(1) : path;
+                cleanPath = cleanPath.replace(/\.html$/, "");
+                
+                if (cleanPath === "" || cleanPath === "index") cleanPath = "app";
+                
+                // 2. Ensure it ends in .yawdl
+                const targetFile = cleanPath.endsWith('.yawdl') ? cleanPath : cleanPath + ".yawdl";
+
+                // 3. Fetch the content
+                const response = await fetch(window.location.origin + "/" + targetFile);
+                if (!response.ok) throw new Error("Could not find " + targetFile);
+                
+                const code = await response.text();
+                const result = window.Yawdl.compile(code);
+
+                // Update Page
+                document.title = result.title || "YAWDL";
+                document.getElementById('root').innerHTML = result.ui;
+                
+                // Handle CSS (relative to root)
+                const styleEl = document.createElement("style");
+                styleEl.textContent = result.styles;
+                document.head.appendChild(styleEl);
+
+                // Run Scripts
+                const scriptEl = document.createElement("script");
+                scriptEl.textContent = result.scripts;
+                document.body.appendChild(scriptEl);
+
+            } catch (err) {
+                document.getElementById('root').innerHTML = "<pre style='color:#eb6f92'>Routing Error: " + err.message + "</pre>";
+            }
+        }
+
+        // 4. THE FIX FOR DOWNLOADING: Listen for clicks and stop them
+        window.onclick = (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href.startsWith(window.location.origin)) {
+                // If it's a real external site or a JS file, don't intercept
+                if (link.href.endsWith('.js') || link.href.includes('#')) return;
+                
+                e.preventDefault(); // STOP THE DOWNLOAD
+                history.pushState(null, '', link.href);
+                navigate(window.location.pathname);
+            }
+        };
+
+        window.onpopstate = () => navigate(window.location.pathname);
+        navigate(window.location.pathname);
     </script>
 </body>
 </html>
