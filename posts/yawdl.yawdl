@@ -18,9 +18,9 @@ UI {
           have to manage multiple files at once. Yawdl is still in early 
           development with only a few tags nativly these are style, script, ui, 
           paget, import, image, and tt as well as supporting all html tags out 
-          of the box. Right now yawdl is compiling into html using a simple 
+          of the box. <s>Right now yawdl is compiling into html using a simple 
           typescript compiler but I do want to make it support running with 
-          out compiling to html. You can view the github 
+          out compiling to html.</s> Yawdl now compiles client side no need to <b>compile to html! </b> You can view the github 
           <a href="https://github.com/chersbobers/yawdl"> Here </a>
         </p>
       </section>

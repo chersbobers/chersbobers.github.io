@@ -1,0 +1,26 @@
+Import("./styles.css")
+
+Paget { Yawdl Roadmap - 19/2/26 }
+
+UI {
+  <div class="page">
+    <header class="site-header">
+      <span class="subtitle">18/02/26</span>
+      <h1>yawdl's future</h1>
+    </header>
+
+    <article>
+      <section>
+        <h3>Whats next</h3>
+        <p>
+          Hello, I have a few ideas on what else to add to yawdl I am going to try making a yawdl style css replacement for the yawdl ecosytem and this will most likely be called yawsl Yet another web styling language.
+        </p>
+      </section>
+    </article>
+
+    <footer class="site-footer">
+      <a href="/">back to home</a>
+      <div class="credit">ps I made this whole site in yawdl</div>
+    </footer>
+  </div>
+}
