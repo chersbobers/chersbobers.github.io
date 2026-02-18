@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
     <title>YAWDL</title>
     <style id="yawdl-init-style">
-        body { background: #191724; color: #e0def4; font-family: monospace; padding: 20px; }
+        body { background: #191724; color: #e0def4; font-family: monospace; padding: 20px; margin: 0; }
     </style>
 </head>
 <body>
@@ -16,49 +17,63 @@
 
         async function navigate(path) {
             try {
-                // 1. Clean the path (remove leading slash and any existing .html extension)
-                let cleanPath = path.startsWith('/') ? path.slice(1) : path;
-                cleanPath = cleanPath.replace(/\.html$/, "");
-                
+                let cleanPath = path.replace(/^\//, "").replace(/\.html$/, "");
                 if (cleanPath === "" || cleanPath === "index") cleanPath = "app";
                 
-                // 2. Ensure it ends in .yawdl
                 const targetFile = cleanPath.endsWith('.yawdl') ? cleanPath : cleanPath + ".yawdl";
-
-                // 3. Fetch the content
-                const response = await fetch(window.location.origin + "/" + targetFile);
-                if (!response.ok) throw new Error("Could not find " + targetFile);
+                
+                const response = await fetch("/" + targetFile);
+                if (!response.ok) throw new Error("File not found: " + targetFile);
                 
                 const code = await response.text();
                 const result = window.Yawdl.compile(code);
 
-                // Update Page
                 document.title = result.title || "YAWDL";
                 document.getElementById('root').innerHTML = result.ui;
                 
-                // Handle CSS (relative to root)
-                const styleEl = document.createElement("style");
-                styleEl.textContent = result.styles;
-                document.head.appendChild(styleEl);
+                document.querySelectorAll('.yawdl-dynamic').forEach(el => el.remove());
 
-                // Run Scripts
-                const scriptEl = document.createElement("script");
-                scriptEl.textContent = result.scripts;
-                document.body.appendChild(scriptEl);
+                if (result.styles) {
+                    const styleEl = document.createElement("style");
+                    styleEl.className = "yawdl-dynamic";
+                    styleEl.textContent = result.styles;
+                    document.head.appendChild(styleEl);
+                }
+
+                if (result.head) {
+                    const tempHead = document.createElement('div');
+                    tempHead.innerHTML = result.head;
+                    
+                    Array.from(tempHead.childNodes).forEach(node => {
+                        if (node.nodeType === 1) {
+                            node.classList.add('yawdl-dynamic');
+                            document.head.appendChild(node);
+                        }
+                    });
+                }
+
+                if (result.scripts) {
+                    const scriptEl = document.createElement("script");
+                    scriptEl.className = "yawdl-dynamic";
+                    scriptEl.textContent = result.scripts;
+                    document.body.appendChild(scriptEl);
+                }
 
             } catch (err) {
-                document.getElementById('root').innerHTML = "<pre style='color:#eb6f92'>Routing Error: " + err.message + "</pre>";
+                document.getElementById('root').innerHTML = `
+                    <div style='color:#eb6f92; padding: 20px;'>
+                        <pre>Routing Error: ${err.message}</pre>
+                        <a href="/" style="color:#f6c177">Return Home</a>
+                    </div>`;
             }
         }
 
-        // 4. THE FIX FOR DOWNLOADING: Listen for clicks and stop them
         window.onclick = (e) => {
             const link = e.target.closest('a');
             if (link && link.href.startsWith(window.location.origin)) {
-                // If it's a real external site or a JS file, don't intercept
-                if (link.href.endsWith('.js') || link.href.includes('#')) return;
+                if (link.href.match(/\.(js|css|png|jpg|exe|zip)$/) || link.href.includes('#')) return;
                 
-                e.preventDefault(); // STOP THE DOWNLOAD
+                e.preventDefault();
                 history.pushState(null, '', link.href);
                 navigate(window.location.pathname);
             }

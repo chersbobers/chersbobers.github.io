@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First - 16/02/26</title>
-    <link rel="stylesheet" href="../style.css">
-</head>
-<body>
+Import("./styles.css")
+
+Paget { First - 16/02/26 }
+
+UI {
     <div class="page">
         <header class="site-header">
             <span class="subtitle">16/02/26</span>
@@ -16,9 +12,9 @@
         <article>
             <p>I have made this cool blog thing! Im now also going to post on hackernews :) I don't really have anything to post but I will find something to post.</p>
         </article>
+
         <footer class="site-footer">
-            <a href="../index.html">back to home</a>
+            <a href="/">back to home</a>
         </footer>
     </div>
-</body>
-</html>
+}

@@ -1,4 +1,4 @@
-Import("/style.css")
+Import("./styles.css")
 
 Paget { Yawdl - 18/2/26 }
 
@@ -14,8 +14,8 @@ UI {
         <h3>About YAWDL</h3>
         <p>
           Yawdl stands for yet another web development language and is made to 
-          bundle html, css, and js/ts into easy to read language so you don't 
-          have to manage multiple files at once. Yawdl is still in very early 
+          bundle html, css, and js/ts into one easy to read language so you don't 
+          have to manage multiple files at once. Yawdl is still in early 
           development with only a few tags nativly these are style, script, ui, 
           paget, import, image, and tt as well as supporting all html tags out 
           of the box. Right now yawdl is compiling into html using a simple 
@@ -28,7 +28,7 @@ UI {
 
     <footer class="site-footer">
       <a href="/">back to home</a>
-      <div class="credit">ps I made this with yawdl</div>
+      <div class="credit">ps I made this whole site in yawdl</div>
     </footer>
   </div>
 }
